@@ -12,7 +12,7 @@
 
 			$concatIdCategoria = $categorias . '-';
 
-			$stmtEmpresas = $this->conection->prepare("select * from tab_clientes where id_categorias like CONCAT('%', :categorias, '%')");
+			$stmtEmpresas = $this->conection->prepare("select * from tab_clientes where id_categorias like CONCAT('%', :categorias, '%') ");
 			$stmtEmpresas->bindParam(":categorias", $concatIdCategoria);
 			$stmtEmpresas->execute();
 
@@ -27,7 +27,16 @@
 
 		public function getCliente($id = null)
 		{
-			$stmtEmpresas = $this->conection->prepare("select * from tab_clientes where Id = :id");
+			$stmtEmpresas = $this->conection->prepare("
+				select c.* ,
+				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', f.imagem) as fachada,
+				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', l.imagem) as logo
+				from tab_clientes  c
+				inner join  tab_clientes_fachada f on c.Id = f.id_cliente 
+				inner join tab_clientes_logotipo l on c.Id = l.id_cliente
+				where c.Id = :id");
+
+			
 			$stmtEmpresas->bindParam(":id", $id);
 			$stmtEmpresas->execute();
 
@@ -42,7 +51,7 @@
 
 		public function clickCliente($id = null){
 		
-			$query = 'update tab_clientes set cliquesapp = cliquesapp + 1 where Id = :id';
+			$query = "INSERT INTO tab_cliques ( dhcad, quemcriou, id_empresa) VALUES (now(), 'Aplicativo Mobile', :id)";
 			$stmt = $this->conection->prepare($query);
 			$stmt->bindParam(":id", $id);
 

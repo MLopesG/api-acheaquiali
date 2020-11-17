@@ -1,8 +1,8 @@
 <?php 
 
-	include_once '../config/cors.php';
-	include_once '../config/database.php';
-	include_once '../classes/clientes.php';
+	include_once './config/cors.php';
+	include_once './config/database.php';
+	include_once './classes/clientes.php';
 
 	$database = new Database();
 	$connection = $database->getConnection();
@@ -23,7 +23,7 @@
 			break;
 		case 'single':
 			$id = isset($_GET['id']) ? $_GET['id'] : NULL;
-			$result['clientes'] = $classClientes->getCliente($id);
+			$result['cliente'] = $classClientes->getCliente($id);
 			break;
 		case 'click':
 			$action = isset($_GET['id']) ? $_GET['id'] : NULL;

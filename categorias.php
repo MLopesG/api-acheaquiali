@@ -1,7 +1,7 @@
 <?php 
-	include_once '../config/cors.php';
-	include_once '../config/database.php';
-	include_once '../classes/categorias.php';
+	include_once './config/cors.php';
+	include_once './config/database.php';
+	include_once './classes/categorias.php';
 
 	$database = new Database();
 	$connection = $database->getConnection();
@@ -18,6 +18,15 @@
 	switch ($action) {
 		case 'all':
 			$result['categorias'] = $classCategorias->getCategorias();
+			break;
+		case 'empresas':
+			$categoria = isset($_GET['id']) ? $_GET['id'] : NULL;
+			$result['empresas'] = $classCategorias->getEmpresasCategorias($categoria);
+			break;
+		case 'empresas-search':
+			$categoria = isset($_GET['id']) ? $_GET['id'] : NULL;
+			$search = isset($_GET['search']) ? $_GET['search'] : NULL;
+			$result['empresas'] = $classCategorias->getEmpresasCategoriasSearch($categoria, $search);
 			break;
 		case 'click':
 			$action = isset($_GET['id']) ? $_GET['id'] : NULL;
