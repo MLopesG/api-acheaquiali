@@ -26,7 +26,9 @@
 		{
 
 			// Buscar categorias pelo cliente
-			$stmtClientes = $this->conection->prepare("select * from tab_clientes where descricaodaempresa like CONCAT('%', :search, '%')");
+			$stmtClientes = $this->conection->prepare("select * from tab_clientes where 
+				tags like CONCAT('%', :search, '%' or 
+				descricaodaempresa like CONCAT('%', :search, '%')");
 			$stmtClientes->bindParam(":search", $search);
 			$stmtClientes->execute();
 	

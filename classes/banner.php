@@ -8,14 +8,15 @@
 			$this->conection = $db;
 		}
 
-		public function getBanners(){
+		public function getBanners($tipo = 1){
 
-			$stmt = $this->conection->prepare('
-				select concat("http://acheiaquiali.com.br/sistema/arquivos/banners/", imagem_banner) as url 
+			$stmt = $this->conection->prepare("
+				select concat('http://acheiaquiali.com.br/sistema/arquivos/banners/', imagem_banner) as url 
 				from tab_banners b 
 				inner join tab_clientes c on b.id_cliente = c.Id
-				where b.ativo = "on"
-			');
+				where b.ativo = 'on'
+				and local = {$tipo}
+			");
 			$stmt->execute();
 
 			$resultBanners = [];

@@ -2,12 +2,12 @@
 
 	include_once './config/cors.php';
 	include_once './config/database.php';
-	include_once './classes/banner.php';
+	include_once './classes/cidades.php';
 
 	$database = new Database();
 	$connection = $database->getConnection();
 
-	$classBanners = new Banner($connection);
+	$classCidade = new Cidade($connection);
 	
 	$action = isset($_GET['action']) ? $_GET['action'] : NULL;
 
@@ -18,8 +18,7 @@
 
 	switch ($action) {
 		case 'all':
-			$tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 1;
-			$result['banners'] = $classBanners->getBanners($tipo);
+			$result['cidade'] = $classCidade->getCidade();
 			break;
 		default:
 			 $result['success'] = false;
