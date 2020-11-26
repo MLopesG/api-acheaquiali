@@ -55,7 +55,7 @@
 				$resultCategorias[] = $rowCategoriasSingle;
 			}	
 
-			return $resultCategorias;
+			return array_unique($resultCategorias, SORT_REGULAR);
 		}
 
 		public function getEmpresasCategorias($categoria){
