@@ -21,6 +21,10 @@
 			$id = isset($_GET['id']) ? $_GET['id'] : null;
 			$result['servicos'] = $classServicos->getServicos($id);
 			break;
+		case 'promocoes':
+			$id = isset($_GET['id']) ? $_GET['id'] : null;
+			$result['promocoes'] = $classServicos->getPromocoes($id);
+			break;
 		default:
 			 $result['success'] = false;
 			 $result['message'] = 'Ação não foi encontrado!';

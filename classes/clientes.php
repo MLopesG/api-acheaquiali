@@ -30,10 +30,11 @@
 			$stmtEmpresas = $this->conection->prepare("
 				select c.* , v.*,
 				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', f.imagem) as fachada,
-				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', l.imagem) as logo
+				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', l.imagem) as logo, cs.nome
 				from tab_clientes  c
 				inner join  tab_clientes_fachada f on c.Id = f.id_cliente 
 				left join  tab_clientes_videos v on c.Id = v.id_cliente 
+				left join  tab_cidades cs on cs.Id = c.end_cidade 
 				inner join tab_clientes_logotipo l on c.Id = l.id_cliente
 				where c.Id = :id");
 

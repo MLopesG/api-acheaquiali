@@ -69,8 +69,11 @@
 				c.site,
 				c.end_rua,
 				c.end_numero,
+				cs.nome,
 				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', imagem) as logo
-				from tab_clientes c inner join tab_clientes_logotipo l on c.Id = l.id_cliente
+				from tab_clientes c 
+				inner join tab_clientes_logotipo l on c.Id = l.id_cliente
+				left join  tab_cidades cs on cs.Id = c.end_cidade 
 				where id_categorias like CONCAT('%', :categoria, '%')
 			");
 			$query->bindParam(":categoria", $categoria);
