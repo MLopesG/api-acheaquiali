@@ -37,7 +37,7 @@
 			while($row = $stmtClientes->fetch(PDO::FETCH_ASSOC)){
 
 				$categoriaID  =  $this->converteArray(explode('-', $row['id_categorias']));
-				$queryCategorias  = $this->conection->prepare('select * from tab_categorias where Id in (:categorias)');
+				$queryCategorias  = $this->conection->prepare('select * from tab_categorias where Id in (:categorias) order by descricao');
 				$queryCategorias->bindParam(":categorias", $categoriaID);
 				$queryCategorias->execute();
 
@@ -47,7 +47,7 @@
 			}
 			// -----------------------------------------------------------
 
-			$stmtCategoriasSingle = $this->conection->prepare("select * from tab_categorias where descricao like CONCAT('%', :search, '%')");
+			$stmtCategoriasSingle = $this->conection->prepare("select * from tab_categorias where descricao like CONCAT('%', :search, '%') order by descricao");
 			$stmtCategoriasSingle->bindParam(":search", $search);
 			$stmtCategoriasSingle->execute();
 	
