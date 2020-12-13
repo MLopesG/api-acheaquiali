@@ -51,6 +51,25 @@
 			return $resultEmpresa;
 		}
 
+		public function getClienteVideos($id = null)
+		{
+			$stmt = $this->conection->prepare("
+				SELECT 
+				*
+				FROM tab_clientes_videos
+				where id_cliente = {$id}
+			");
+			$stmt->execute();
+
+			$videos = [];
+
+			while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+				$videos[] =  $row;
+			}			
+
+			return $videos;
+		}
+
 		public function clickCliente($id = null){
 		
 			$query = "INSERT INTO tab_cliques ( dhcad, quemcriou, id_empresa) VALUES (now(), 'Aplicativo Mobile', :id)";

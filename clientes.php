@@ -25,6 +25,10 @@
 			$id = isset($_GET['id']) ? $_GET['id'] : NULL;
 			$result['cliente'] = $classClientes->getCliente($id);
 			break;
+		case 'single-video':
+			$id = isset($_GET['id']) ? $_GET['id'] : NULL;
+			$result['videos'] = $classClientes->getClienteVideos($id);
+			break;
 		case 'click':
 			$action = isset($_GET['id']) ? $_GET['id'] : NULL;
 			$clickVerify = $classClientes->clickCliente($action);
