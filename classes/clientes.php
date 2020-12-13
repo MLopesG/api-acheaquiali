@@ -36,7 +36,7 @@
 				left join  tab_clientes_videos v on c.Id = v.id_cliente 
 				left join  tab_cidades cs on cs.Id = c.end_cidade 
 				inner join tab_clientes_logotipo l on c.Id = l.id_cliente
-				where c.Id = :id");
+				where c.Id = :id and v.destaque = 'on' limit 1");
 
 			
 			$stmtEmpresas->bindParam(":id", $id);
