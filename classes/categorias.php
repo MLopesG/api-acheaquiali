@@ -63,16 +63,11 @@
 
 			$query  = $this->conection->prepare("
 				select 
-				c.Id,
-				c.apelido,
-				c.fonecelular,
-				c.site,
-				c.end_rua,
-				c.end_numero,
+				c.*,
 				cs.nome,
 				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', imagem) as logo
 				from tab_clientes c 
-				inner join tab_clientes_logotipo l on c.Id = l.id_cliente
+				left join tab_clientes_logotipo l on c.Id = l.id_cliente
 				left join  tab_cidades cs on cs.Id = c.end_cidade 
 				where id_categorias like CONCAT('%', :categoria, '%')
 			");
@@ -98,7 +93,8 @@
 				c.end_rua,
 				c.end_numero,
 				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', imagem) as logo
-				from tab_clientes c inner join tab_clientes_logotipo l on c.Id = l.id_cliente
+				from tab_clientes c 
+				left join tab_clientes_logotipo l on c.Id = l.id_cliente
 				where 
 				id_categorias like CONCAT('%', :categoria, '%')
 				or razaosocial like CONCAT('%', :search, '%')
