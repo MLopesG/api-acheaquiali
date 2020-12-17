@@ -12,7 +12,7 @@
 
 			$concatIdCategoria = $categorias . '-';
 
-			$stmtEmpresas = $this->conection->prepare("select * from tab_clientes where id_categorias like CONCAT('%', :categorias, '%') ");
+			$stmtEmpresas = $this->conection->prepare("select * from tab_clientes where id_categorias like CONCAT('%', :categorias, '%') and ativo = 'on'");
 			$stmtEmpresas->bindParam(":categorias", $concatIdCategoria);
 			$stmtEmpresas->execute();
 
@@ -36,7 +36,7 @@
 				left join  tab_clientes_videos v on c.Id = v.id_cliente and v.destaque = 'on'  
 				left join  tab_cidades cs on cs.Id = c.end_cidade 
 				left join tab_clientes_logotipo l on c.Id = l.id_cliente
-				where c.Id = :id limit 1");
+				where c.Id = :id and c.ativo = 'on' limit 1");
 
 			
 			$stmtEmpresas->bindParam(":id", $id);

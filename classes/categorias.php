@@ -10,7 +10,7 @@
 		}
 
 		public function getCategorias(){
-			$stmt = $this->conection->prepare('select Id, descricao from tab_categorias order by descricao');
+			$stmt = $this->conection->prepare('select Id, descricao from tab_categorias where ativo = "on" order by descricao');
 			$stmt->execute();
 
 			$resultCategorias = [];
@@ -37,7 +37,7 @@
 			while($row = $stmtClientes->fetch(PDO::FETCH_ASSOC)){
 
 				$categoriaID  =  $this->converteArray(explode('-', $row['id_categorias']));
-				$queryCategorias  = $this->conection->prepare('select * from tab_categorias where Id in (:categorias) order by descricao');
+				$queryCategorias  = $this->conection->prepare('select * from tab_categorias where Id in (:categorias) and ativo = "on"  order by descricao');
 				$queryCategorias->bindParam(":categorias", $categoriaID);
 				$queryCategorias->execute();
 
@@ -47,7 +47,7 @@
 			}
 			// -----------------------------------------------------------
 
-			$stmtCategoriasSingle = $this->conection->prepare("select * from tab_categorias where descricao like CONCAT('%', :search, '%') order by descricao");
+			$stmtCategoriasSingle = $this->conection->prepare("select * from tab_categorias where descricao like CONCAT('%', :search, '%') and ativo = 'on'  order by descricao");
 			$stmtCategoriasSingle->bindParam(":search", $search);
 			$stmtCategoriasSingle->execute();
 	
@@ -69,7 +69,7 @@
 				from tab_clientes c 
 				left join tab_clientes_logotipo l on c.Id = l.id_cliente
 				left join  tab_cidades cs on cs.Id = c.end_cidade 
-				where id_categorias like CONCAT('%', :categoria, '%')
+				where id_categorias like CONCAT('%', :categoria, '%') and c.ativo = 'on' 
 			");
 			$query->bindParam(":categoria", $categoria);
 			$query->execute();
@@ -82,21 +82,18 @@
 		}	
 
 		public function getEmpresasCategoriasSearch($categoria, $search){
+
 			$resultEmpresas = [];
 
 			$query  = $this->conection->prepare("
 				select 
-				c.Id,
-				c.apelido,
-				c.fonecelular,
-				c.site,
-				c.end_rua,
-				c.end_numero,
+				c.*,
 				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', imagem) as logo
 				from tab_clientes c 
 				left join tab_clientes_logotipo l on c.Id = l.id_cliente
 				where 
-				id_categorias like CONCAT('%', :categoria, '%')
+				c.ativo = 'on'
+				and id_categorias like CONCAT( :categoria, '%')
 				or razaosocial like CONCAT('%', :search, '%')
 				or nomefantasia like CONCAT('%', :search, '%')
 				or tags like CONCAT('%', :search, '%')
