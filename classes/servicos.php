@@ -37,8 +37,7 @@
 				f.*
 				FROM tab_clientes_fotos f
 				inner join tab_clientes c on c.Id = f.id_cliente
-				WHERE c.Id = {$id} and promocao is null
-				or promocao <> 'on'
+				WHERE c.Id = {$id}
 
 			");
 			$stmt->execute();

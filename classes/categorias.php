@@ -86,8 +86,7 @@
 
 			$resultEmpresas = [];
 
-			$query  = $this->conection->prepare("
-				select 
+			$sql = "select 
 				c.*,
 				concat('http://acheiaquiali.com.br/sistema/arquivos/clientes/', c.diretorio ,'/', imagem) as logo
 				from tab_clientes c 
@@ -95,15 +94,13 @@
 				inner join tab_clientes_categorias tc on tc.id_cliente = c.Id 
 				where 
 				c.ativo = 'on'
-				tc.id_categoria = :categoria
-				or razaosocial like CONCAT('%', :search, '%')
-				or nomefantasia like CONCAT('%', :search, '%')
-				or tags like CONCAT('%', :search, '%')
-				or descricaodaempresa like CONCAT('%', :search, '%')
-			");
-			
+				and tc.id_categoria = :categoria";
+
+
+			$query  = $this->conection->prepare($sql);
+
 			$query->bindParam(":categoria", $categoria);
-			$query->bindParam(":search", $search);
+
 			$query->execute();
 
 			while($row = $query->fetch(PDO::FETCH_ASSOC)){

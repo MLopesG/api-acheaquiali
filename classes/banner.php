@@ -11,7 +11,8 @@
 		public function getBanners($tipo = 1){
 
 			$stmt = $this->conection->prepare("
-				select concat('http://acheiaquiali.com.br/sistema/arquivos/banners/', imagem_banner) as url 
+				select concat('http://acheiaquiali.com.br/sistema/arquivos/banners/', imagem_banner) as url ,
+				b.id_cliente as id_cliente_banner
 				from tab_banners b 
 				inner join tab_clientes c on b.id_cliente = c.Id
 				where b.ativo = 'on'
