@@ -17,8 +17,16 @@
 	];
 
 	switch ($action) {
+		case 'estado_cidades':
+			$estado = isset($_GET['estado_id']) ? $_GET['estado_id'] : NULL;
+			$result['cidades'] = $classCidade->getCidadeEstados($estado);
+			break;
+		case 'single':
+			$cidade = isset($_GET['cidade_id']) ? $_GET['cidade_id'] : NULL;
+			$result['cidade'] = $classCidade->getCidade($cidade);
+			break;
 		case 'all':
-			$result['cidade'] = $classCidade->getCidade();
+			$result['cidades'] = $classCidade->getCidades();
 			break;
 		default:
 			 $result['success'] = false;

@@ -58,7 +58,7 @@
 			return array_unique($resultCategorias, SORT_REGULAR);
 		}
 
-		public function getEmpresasCategorias($categoria){
+		public function getEmpresasCategorias($categoria, $cidade){
 			$resultEmpresas = [];
 
 			$query  = $this->conection->prepare("
@@ -71,6 +71,7 @@
 				left join  tab_cidades cs on cs.Id = c.end_cidade
 				inner join tab_clientes_categorias tc on tc.id_cliente = c.Id 
 				where tc.id_categoria =  :categoria and c.ativo = 'on' 
+				and cs.Id = {$cidade}
 			");
 			$query->bindParam(":categoria", $categoria);
 			$query->execute();
@@ -82,7 +83,7 @@
 			return $resultEmpresas;
 		}	
 
-		public function getEmpresasCategoriasSearch($categoria, $search){
+		public function getEmpresasCategoriasSearch($categoria, $search, $cidade){
 
 			$resultEmpresas = [];
 
@@ -94,7 +95,8 @@
 				inner join tab_clientes_categorias tc on tc.id_cliente = c.Id 
 				where 
 				c.ativo = 'on'
-				and tc.id_categoria = :categoria";
+				and tc.id_categoria = :categoria
+				and  c.end_cidade = {$cidade}";
 
 
 			$query  = $this->conection->prepare($sql);

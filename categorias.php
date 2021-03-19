@@ -21,12 +21,14 @@
 			break;
 		case 'empresas':
 			$categoria = isset($_GET['id']) ? $_GET['id'] : NULL;
-			$result['empresas'] = $classCategorias->getEmpresasCategorias($categoria);
+			$cidade = isset($_GET['cidade']) ? $_GET['cidade'] : NULL;
+			$result['empresas'] = $classCategorias->getEmpresasCategorias($categoria, $cidade);
 			break;
 		case 'empresas-search':
 			$categoria = isset($_GET['id']) ? $_GET['id'] : NULL;
 			$search = isset($_GET['search']) ? $_GET['search'] : NULL;
-			$result['empresas'] = $classCategorias->getEmpresasCategoriasSearch($categoria, $search);
+			$cidade = isset($_GET['cidade']) ? $_GET['cidade'] : NULL;
+			$result['empresas'] = $classCategorias->getEmpresasCategoriasSearch($categoria, $search, $cidade);
 			break;
 		case 'click':
 			$action = isset($_GET['id']) ? $_GET['id'] : NULL;
