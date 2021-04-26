@@ -26,19 +26,25 @@
 		{
 
 			// Buscar categorias pelo cliente
-			$stmtClientes = $this->conection->prepare("select * from tab_clientes where 
-				tags like CONCAT('%', :search, '%' or 
-				descricaodaempresa like CONCAT('%', :search, '%')");
+			$stmtClientes = $this->conection->prepare("
+				SELECT tbca.id_categoria as id_categoria FROM tab_clientes tbc
+				inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
+				where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
+				LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
+			");
+
 			$stmtClientes->bindParam(":search", $search);
 			$stmtClientes->execute();
-	
+
 			$resultCategorias = [];
 
 			while($row = $stmtClientes->fetch(PDO::FETCH_ASSOC)){
 
-				$categoriaID  =  $this->converteArray(explode('-', $row['id_categorias']));
-				$queryCategorias  = $this->conection->prepare('select * from tab_categorias where Id in (:categorias) and ativo = "on"  order by descricao');
-				$queryCategorias->bindParam(":categorias", $categoriaID);
+				$queryCategorias  = $this->conection->prepare('
+					select * from tab_categorias where Id = :categorias and ativo = "on"  order by descricao'
+				);
+
+				$queryCategorias->bindParam(":categorias", $row['id_categoria']);
 				$queryCategorias->execute();
 
 				while($rowCategorias = $queryCategorias->fetch(PDO::FETCH_ASSOC)){
@@ -47,7 +53,13 @@
 			}
 			// -----------------------------------------------------------
 
-			$stmtCategoriasSingle = $this->conection->prepare("select * from tab_categorias where descricao like CONCAT('%', :search, '%') and ativo = 'on'  order by descricao");
+			$stmtCategoriasSingle = $this->conection->prepare("
+				select * from tab_categorias 
+				where LOWER(descricao)
+				like CONCAT('%', LOWER(:search), '%') 
+				and ativo = 'on'  order by descricao
+			");
+
 			$stmtCategoriasSingle->bindParam(":search", $search);
 			$stmtCategoriasSingle->execute();
 	
@@ -121,10 +133,6 @@
 				return true;
 			}
 			return false;
-		}
-
-		private function converteArray($array){
-			return implode(',', ($array));
 		}
 	}
  ?>
