@@ -51,6 +51,11 @@
 					$resultCategorias[] = $rowCategorias;
 				}	
 			}
+
+			if(count($resultCategorias) > 0) {
+				return $resultCategorias;
+			}
+
 			// -----------------------------------------------------------
 
 			$stmtCategoriasSingle = $this->conection->prepare("
@@ -67,7 +72,7 @@
 				$resultCategorias[] = $rowCategoriasSingle;
 			}	
 
-			return array_unique($resultCategorias, SORT_REGULAR);
+			return $resultCategorias;
 		}
 
 		public function getEmpresasCategorias($categoria, $cidade){
