@@ -27,8 +27,9 @@
 
 			// Buscar categorias pelo cliente
 			$stmtClientes = $this->conection->prepare("
-				SELECT tbca.id_categoria as id_categoria FROM tab_clientes tbc
+				SELECT ca.*  FROM tab_clientes tbc
 				inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
+				inner join tab_categorias ca on ca.Id = tbca.id_categoria
 				where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
 				LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
 			");
@@ -36,43 +37,7 @@
 			$stmtClientes->bindParam(":search", $search);
 			$stmtClientes->execute();
 
-			$resultCategorias = [];
-
-			while($row = $stmtClientes->fetch(PDO::FETCH_ASSOC)){
-
-				$queryCategorias  = $this->conection->prepare('
-					select * from tab_categorias where Id = :categorias and ativo = "on"  order by descricao'
-				);
-
-				$queryCategorias->bindParam(":categorias", $row['id_categoria']);
-				$queryCategorias->execute();
-
-				while($rowCategorias = $queryCategorias->fetch(PDO::FETCH_ASSOC)){
-					$resultCategorias[] = $rowCategorias;
-				}	
-			}
-
-			if(count($resultCategorias) > 0) {
-				return $resultCategorias;
-			}
-
-			// -----------------------------------------------------------
-
-			$stmtCategoriasSingle = $this->conection->prepare("
-				select * from tab_categorias 
-				where LOWER(descricao)
-				like CONCAT('%', LOWER(:search), '%') 
-				and ativo = 'on'  order by descricao
-			");
-
-			$stmtCategoriasSingle->bindParam(":search", $search);
-			$stmtCategoriasSingle->execute();
-	
-			while($rowCategoriasSingle = $stmtCategoriasSingle->fetch(PDO::FETCH_ASSOC)){
-				$resultCategorias[] = $rowCategoriasSingle;
-			}	
-
-			return $resultCategorias;
+			return $stmtClientes->fetchAll(PDO::FETCH_ASSOC);
 		}
 
 		public function getEmpresasCategorias($categoria, $cidade){
