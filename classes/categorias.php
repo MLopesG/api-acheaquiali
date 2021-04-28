@@ -28,10 +28,11 @@
 			// Buscar categorias pelo cliente
 			$stmtClientes = $this->conection->prepare("
 				SELECT ca.Id, ca.descricao as descricao, 'categoria'  as tipo FROM tab_clientes tbc
-				inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
-				inner join tab_categorias ca on ca.Id = tbca.id_categoria
-				where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
-				LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
+					inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
+					inner join tab_categorias ca on ca.Id = tbca.id_categoria
+					where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
+					LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
+					and tbc.ativo = 'on' 
 				union
 				SELECT tbc.Id,  (
 			       case
@@ -45,6 +46,7 @@
 				inner join tab_categorias ca on ca.Id = tbca.id_categoria
 				where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
 				LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
+				and tbc.ativo = 'on' 
 			");
 
 			$stmtClientes->bindParam(":search", $search);
