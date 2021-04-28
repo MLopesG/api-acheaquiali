@@ -22,17 +22,18 @@
 			return $resultCategorias;
 		}
 
-		public function searchCategorias($search = null)
+		public function searchCategorias($search = null, $cidade = null)
 		{
-
 			// Buscar categorias pelo cliente
 			$stmtClientes = $this->conection->prepare("
 				SELECT ca.Id, ca.descricao as descricao, 'categoria'  as tipo FROM tab_clientes tbc
-					inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
-					inner join tab_categorias ca on ca.Id = tbca.id_categoria
-					where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
-					LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
-					and tbc.ativo = 'on' 
+				inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
+				inner join tab_categorias ca on ca.Id = tbca.id_categoria
+				inner join  tab_cidades cs on cs.Id = tbc.end_cidade
+				where tbc.ativo = 'on' 
+				and cs.Id = {$cidade}
+				and LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') 
+				and LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
 				union
 				SELECT tbc.Id,  (
 			       case
@@ -44,9 +45,11 @@
 			    ) as descricao, 'empresa'  as tipo   FROM tab_clientes tbc
 				inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
 				inner join tab_categorias ca on ca.Id = tbca.id_categoria
-				where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
-				LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
-				and tbc.ativo = 'on' 
+				inner join  tab_cidades cs on cs.Id = tbc.end_cidade
+				where tbc.ativo = 'on' 
+				and cs.Id = {$cidade}
+				and LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') 
+				and LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
 			");
 
 			$stmtClientes->bindParam(":search", $search);
