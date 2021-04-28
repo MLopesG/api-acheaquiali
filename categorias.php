@@ -43,7 +43,8 @@
 			break;
 		case 'search':
 			$search = isset($_GET['search']) ? $_GET['search'] : NULL;
-			$result['data'] = $classCategorias->searchCategorias($search);
+			$cidade = isset($_GET['cidade']) ? $_GET['cidade'] : NULL;
+			$result['data'] = $classCategorias->searchCategorias($search, $cidade);
 			break;
 		default:
 			 $result['success'] = false;
