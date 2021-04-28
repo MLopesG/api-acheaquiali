@@ -32,8 +32,8 @@
 				inner join  tab_cidades cs on cs.Id = tbc.end_cidade
 				where tbc.ativo = 'on' 
 				and cs.Id = {$cidade}
-				and LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') 
-				and LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
+				and (LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') 
+				or LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%') ) 
 				union
 				SELECT tbc.Id,  (
 			       case
@@ -47,9 +47,9 @@
 				inner join tab_categorias ca on ca.Id = tbca.id_categoria
 				inner join  tab_cidades cs on cs.Id = tbc.end_cidade
 				where tbc.ativo = 'on' 
-				and cs.Id = {$cidade}
-				and LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') 
-				and LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
+					and cs.Id = {$cidade}
+				and (LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') 
+				or LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%') ) 
 			");
 
 			$stmtClientes->bindParam(":search", $search);
