@@ -27,7 +27,20 @@
 
 			// Buscar categorias pelo cliente
 			$stmtClientes = $this->conection->prepare("
-				SELECT ca.*  FROM tab_clientes tbc
+				SELECT ca.Id, ca.descricao as descricao, 'categoria'  as tipo FROM tab_clientes tbc
+				inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
+				inner join tab_categorias ca on ca.Id = tbca.id_categoria
+				where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
+				LOWER(tbc.descricaodaempresa) like  CONCAT('%', LOWER(:search), '%')
+				union
+				SELECT tbc.Id,  (
+			       case
+				        when (tbc.apelido is not null)  and tbc.apelido <> '' then tbc.apelido
+				        when (tbc.nomefantasia is not null) and tbc.nomefantasia <> ''  then tbc.nomefantasia
+				        when (tbc.razaosocial is not null)  and tbc.razaosocial <> ''  then tbc.razaosocial
+			        	else tbc.nomecompleto
+			        end
+			    ) as descricao, 'empresa'  as tipo   FROM tab_clientes tbc
 				inner join tab_clientes_categorias tbca on tbc.Id = tbca.id_cliente
 				inner join tab_categorias ca on ca.Id = tbca.id_categoria
 				where LOWER(tbc.tags) like  CONCAT('%', LOWER(:search), '%') or 
